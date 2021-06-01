@@ -13,28 +13,27 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 
-import Entity.Book;
+import Entity.SinhVien;
 
 
-public class BookService {
+public class SinhVienService {
 
-	public  String GET_ALL_BOOK="http://localhost:8080/book/getall";
-	public  String GET_ONE_BOOK="http://localhost:8080/book/getone";
-	public  String POST_BOOK="http://localhost:8080/book/insert"; 
-	public  String DELETE_BOOK="http://localhost:8080/book/delete";
-	public  String PUT_BOOK="http://localhost:8080/book/update";
-	private static BookService instance;
+	public  String GET_ALL_SINH_VIEN="http://localhost:8080/sinhvien/getall";
+	public  String GET_ONE_SINH_VIEN="http://localhost:8080/sinhvien/getone";
+	public  String POST_SINH_VIEN="http://localhost:8080/sinhvien/insert"; 
+	public  String PUT_SINH_VIEN="http://localhost:8080/sinhvien/update";
+	private static SinhVienService instance;
 	
 	
-	public static BookService GetInstance() {
+	public static SinhVienService GetInstance() {
 		if(instance==null) {
-			instance = new BookService();
+			instance = new SinhVienService();
 		}
 		return instance;
 	}
-	public List<Book>GetAllBook() throws IOException {
-		List<Book>getall=new ArrayList<>();
-		URL urlForGetRequest = new URL(GET_ALL_BOOK);
+	public List<SinhVien>GetAllSinhVien() throws IOException {
+		List<SinhVien>getall=new ArrayList<>();
+		URL urlForGetRequest = new URL(GET_ALL_SINH_VIEN);
 		String readLine = null;
 		HttpURLConnection conection = (HttpURLConnection) urlForGetRequest.openConnection();
 		conection.setRequestMethod("GET"); // set userId its a sample here
@@ -55,10 +54,10 @@ public class BookService {
 			Gson gson = new Gson();
 			JsonParser parser = new JsonParser();
 			JsonArray object = (JsonArray) parser.parse(response);// response will be the json String
-			Book[] bookList = gson.fromJson(object, Book[].class);
+			SinhVien[] svList = gson.fromJson(object, SinhVien[].class);
 
-			for(int i=0;i<bookList.length;i++)
-				getall.add(bookList[i]);
+			for(int i=0;i<svList.length;i++)
+				getall.add(svList[i]);
 			
 		} else {
 			System.out.println("GET NOT WORKED");
@@ -66,9 +65,9 @@ public class BookService {
 
 		return getall;
 	}
-	public Book GetOneBook(Long id) throws IOException {
-		Book book=new Book();
-		URL urlForGetRequest = new URL(GET_ONE_BOOK+"/"+id);
+	public SinhVien GetOneSinhVien(int id) throws IOException {
+		SinhVien sinhvien=new SinhVien();
+		URL urlForGetRequest = new URL(GET_ONE_SINH_VIEN+"/"+id);
 		String readLine = null;
 		HttpURLConnection conection = (HttpURLConnection) urlForGetRequest.openConnection();
 		conection.setRequestMethod("GET"); // set userId its a sample here
@@ -85,21 +84,21 @@ public class BookService {
 			} in .close();
 			
 			Gson gson = new Gson();
-			book = gson.fromJson(response, Book.class);
+			sinhvien = gson.fromJson(response, SinhVien.class);
 
 			
 		} else {
 			System.out.println(urlForGetRequest);
 		}
 
-		return book;
+		return sinhvien;
 	}
-	public  int POSTRequest(Book book) throws IOException {
+	public  int POSTRequest(SinhVien sv) throws IOException {
 		Gson gson = new Gson();
-		String POST_PARAMS = gson.toJson(book);
+		String POST_PARAMS = gson.toJson(sv);
 	    
 	    System.out.println(POST_PARAMS);
-	    URL obj = new URL(POST_BOOK);
+	    URL obj = new URL(POST_SINH_VIEN);
 	    HttpURLConnection postConnection = (HttpURLConnection) obj.openConnection();
 	    postConnection.setRequestMethod("POST");
 	    postConnection.setRequestProperty("Content-Type", "application/json");
@@ -133,37 +132,13 @@ public class BookService {
 	    }
 	    return responseCode;
 	}
-	public int DeleteBook(Long id) throws IOException {
-		Book book=new Book();
-		URL urlForGetRequest = new URL(DELETE_BOOK+"/"+id);
-		String readLine = null;
-		HttpURLConnection conection = (HttpURLConnection) urlForGetRequest.openConnection();
-		conection.setRequestMethod("DELETE"); // set userId its a sample here
-		conection.setRequestProperty("Content-Type", "application/json");
-		int responseCode = conection.getResponseCode();
-
-
-		if (responseCode == HttpURLConnection.HTTP_OK) {
-			BufferedReader in = new BufferedReader(
-					new InputStreamReader(conection.getInputStream()));
-			String response = new String();
-			while ((readLine = in .readLine()) != null) {
-				response+=(readLine);
-			} in .close();
-			
-			
-		} else {
-			System.out.println("GET NOT WORKED");
-		}
-
-		return responseCode;
-	}
-	public  int PUTRequest(Book book) throws IOException {
+	
+	public  int PUTRequest(SinhVien sv) throws IOException {
 
 		Gson gson = new Gson();
-		String PUT_PARAMS = gson.toJson(book);
+		String PUT_PARAMS = gson.toJson(sv);
 	    System.out.println(PUT_PARAMS);
-	    URL obj = new URL(PUT_BOOK+"/"+book.getId());
+	    URL obj = new URL(PUT_SINH_VIEN+"/"+sv.getMaso());
 	    HttpURLConnection putConnection = (HttpURLConnection) obj.openConnection();
 	    putConnection.setRequestMethod("PUT");
 	    putConnection.setRequestProperty("Content-Type", "application/json");
